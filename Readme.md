@@ -24,7 +24,7 @@ The app will use MVVM, Navigation Component, Retrofit, Glide, and Room.
     * **3 Screens:** Pokemon List (Grid), Pokemon Details, Caught Pokemon List (Grid). Use Navigation Controller with SafeArgs for passing data (like Pokemon ID).
     * **Layouts:** Using `ConstraintLayout` for screens. Using `RecyclerView` with `GridLayoutManager` for the grids.
     * **Resources:** Using `strings.xml`, `colors.xml`, `dimens.xml` for values.
-* **Animation (MotionLayout):**Simple animations using `MotionLayout` in a `MotionScene` on the Pokemon Detail screen.
+* **Animation (MotionLayout):** Simple animations using `MotionLayout` in a `MotionScene` on the Pokemon Detail screen.
 * **Network & Data:**
     * **API:** Using `Retrofit` and `Moshi`/`Gson` to get data from `pokeapi.co`.
     * **Images:** Using `Glide` to load Pokemon images. Showing placeholders while loading.
