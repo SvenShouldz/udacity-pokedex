@@ -1,0 +1,77 @@
+[versions]
+# --- Kotlin ---
+agp = "8.4.1"
+kotlin = "1.9.24"
+coroutines = "1.8.1"
+ksp = "1.9.24-1.0.20"
+safeArgsPlugin = "2.7.7"
+
+# --- Google ---
+material = "1.12.0"
+
+# --- AndroidX ---
+androidxCore = "1.13.1"
+androidxAppcompat = "1.7.0"
+androidxActivity = "1.9.0"
+androidxFragment = "1.8.0"
+androidxConstraintlayout = "2.1.4"
+androidxLifecycle = "2.8.1"
+androidxNavigation = "2.7.7"
+androidxRoom = "2.6.1"
+
+# --- Networking ---
+retrofit = "2.11.0"
+moshi = "1.15.1"
+
+# --- Image Loading ---
+glide = "4.16.0"
+
+# --- Testing ---
+espressoCore = "3.6.1"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+
+[libraries]
+
+# --- AndroidX ---
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppcompat" }
+androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "androidxActivity" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
+androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidxFragment" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidxConstraintlayout" }
+
+# --- Lifecycle ---
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
+androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "androidxLifecycle" }
+androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "androidxLifecycle" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
+androidx-navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "androidxNavigation" }
+androidx-navigation-ui = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "androidxNavigation" }
+
+# --- Networking ---
+junit = { module = "junit:junit", version.ref = "junit" }
+retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
+moshi-core = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
+
+# --- Image Loading ---
+glide-core = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+
+# --- Database ---
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidxRoom" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidxRoom" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "androidxRoom" }
+
+# --- Coroutines ---
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+
+# --- Google Ui ---
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+androidx-navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "safeArgsPlugin" }
