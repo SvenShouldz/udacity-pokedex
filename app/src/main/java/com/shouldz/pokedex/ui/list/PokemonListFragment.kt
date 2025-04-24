@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -32,7 +33,7 @@ class PokemonListFragment : Fragment() {
 
         setupRecyclerView()
         observeViewModel()
-
+        setupSearchView()
         // Trigger initial data load
         viewModel.loadPokemonList()
 
@@ -46,7 +47,24 @@ class PokemonListFragment : Fragment() {
             adapter = pokemonAdapter
             // Using GridLayoutManager for a grid layout
             layoutManager = GridLayoutManager(requireContext(), 3)
+            setHasFixedSize(true)
         }
+    }
+
+    private fun setupSearchView() {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                binding.searchView.clearFocus() // hide keyboard on submit
+                return true
+            }
+
+            // Called every time the text in the SearchView changes
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // Passing query to viewModel
+                viewModel.setSearchQuery(newText.orEmpty())
+                return true
+            }
+        })
     }
 
     private fun navigateToDetail(pokemon: PokemonResult) {
@@ -57,9 +75,9 @@ class PokemonListFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.pokemonList.observe(viewLifecycleOwner) { pokemonList ->
+        viewModel.filteredPokemonList.observe(viewLifecycleOwner) { filteredList ->
             // Submit list to adapter when it changes
-            pokemonAdapter.submitList(pokemonList)
+            pokemonAdapter.submitList(filteredList)
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
