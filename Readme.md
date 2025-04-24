@@ -1,8 +1,11 @@
 # Design Document: Simple Pokedex App
 
 **Project:** Udacity Android Nanodegree Capstone Project
+
 **Option Selected:** Option 1 - Custom Application
+
 **Author:** Sven Schulz
+
 **Date:** April 23, 2025
 
 ## 1. App Goal
