@@ -8,25 +8,29 @@ import androidx.recyclerview.widget.RecyclerView
 import com.shouldz.pokedex.data.model.PokemonResult
 import com.shouldz.pokedex.databinding.ListItemPokemonBinding
 
-class PokemonListAdapter : ListAdapter<PokemonResult, PokemonListAdapter.PokemonViewHolder>(PokemonDiffCallback()) {
+class PokemonListAdapter(private val onItemClicked: (PokemonResult) -> Unit) :
+    ListAdapter<PokemonResult, PokemonListAdapter.PokemonViewHolder>(PokemonDiffCallback()) {
 
     // ViewHolder class
-    class PokemonViewHolder(private val binding: ListItemPokemonBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(pokemonResult: PokemonResult) {
+    class PokemonViewHolder(private val binding: ListItemPokemonBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(pokemonResult: PokemonResult, listener: (PokemonResult) -> Unit) {
             binding.pokemonNameText.text = pokemonResult.name.replaceFirstChar { it.titlecase() }
-            // TODO: Set click listener later for navigation
-            // TODO: Load image using Glide later
+            binding.root.setOnClickListener {
+                listener(pokemonResult)
+            }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonViewHolder {
-        val binding = ListItemPokemonBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ListItemPokemonBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PokemonViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: PokemonViewHolder, position: Int) {
         val currentPokemon = getItem(position)
-        holder.bind(currentPokemon)
+        holder.bind(currentPokemon, onItemClicked)
     }
 
     // DiffUtil Callback for ListAdapter

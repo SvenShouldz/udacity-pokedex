@@ -7,10 +7,10 @@
     tools:context=".ui.detail.PokemonDetailFragment">
 
     <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
+        android:id="@+id/detail_pokemon_name_text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pokemon Detail"
+        tools:text="Pokemon Detail"
         android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@id/spacer"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,21 +27,12 @@
         app:layout_constraintVertical_bias="0.5" />
 
     <Button
-        android:id="@+id/navigate_caught_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go to Caught"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/spacer" />
-
-    <Button
         android:id="@+id/navigate_list_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Go to List"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/navigate_caught_button" />
+        app:layout_constraintTop_toBottomOf="@id/spacer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

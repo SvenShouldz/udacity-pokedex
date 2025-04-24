@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_pokemonDetailFragment_to_pokemonListFragment"
             app:destination="@id/pokemonListFragment" />
+        <argument
+            android:name="pokemonName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/caughtListFragment"

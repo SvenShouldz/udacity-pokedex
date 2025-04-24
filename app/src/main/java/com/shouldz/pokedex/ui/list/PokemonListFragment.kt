@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.shouldz.pokedex.data.model.PokemonResult
 import com.shouldz.pokedex.databinding.FragmentPokemonListBinding
 
 class PokemonListFragment : Fragment() {
@@ -37,13 +39,21 @@ class PokemonListFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        pokemonAdapter = PokemonListAdapter()
+        pokemonAdapter = PokemonListAdapter { clickedPokemon ->
+            navigateToDetail(clickedPokemon)
+        }
         binding.pokemonRecyclerView.apply {
             adapter = pokemonAdapter
             // Using GridLayoutManager for a grid layout
-            layoutManager = GridLayoutManager(requireContext(), 3) // Example: 3 columns
+            layoutManager = GridLayoutManager(requireContext(), 3)
         }
-        // TODO: Add item click listener to adapter later for navigation
+    }
+
+    private fun navigateToDetail(pokemon: PokemonResult) {
+        // Using Safe Args
+        val action = PokemonListFragmentDirections
+            .actionPokemonListFragmentToPokemonDetailFragment(pokemon.name) // Pass the name
+        findNavController().navigate(action)
     }
 
     private fun observeViewModel() {
