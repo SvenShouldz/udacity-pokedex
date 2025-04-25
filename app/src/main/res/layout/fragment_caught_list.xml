@@ -6,19 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.caught.CaughtListFragment">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/caught_list_toolbar"
-        android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.App.Toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/caught_pokemon_title"
-        app:titleTextColor="?attr/colorOnPrimary" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/caught_pokemon_recycler_view"
         android:layout_width="0dp"
@@ -28,7 +15,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/caught_list_toolbar"
+        app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/list_item_caught_pokemon" />
 
     <TextView
@@ -41,7 +28,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/caught_list_toolbar"
+        app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

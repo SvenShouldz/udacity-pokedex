@@ -9,4 +9,6 @@
     <string name="catch_pokemon">Catch</string>
     <string name="caught_pokemon_title">Your Caught Pokemon!</string>
     <string name="no_pokemon_caught">No Pokemon caught yet!</string>
+    <string name="caught_pokemon_button">Caught Pokemon</string>
+    <string name="pokemon_not_found">Pokemon not found</string>
 </resources>

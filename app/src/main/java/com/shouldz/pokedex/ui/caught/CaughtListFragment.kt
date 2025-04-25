@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.appbar.MaterialToolbar
 import com.shouldz.pokedex.R
 import com.shouldz.pokedex.databinding.FragmentCaughtListBinding
 
@@ -21,6 +23,8 @@ class CaughtListFragment : Fragment() {
 
     private lateinit var caughtAdapter: CaughtListAdapter
 
+    private var activityToolbar: MaterialToolbar? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,15 +36,21 @@ class CaughtListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        activityToolbar = activity?.findViewById(R.id.main_toolbar)
+
         setupToolbar()
         setupRecyclerView()
         observeViewModel()
     }
 
     private fun setupToolbar() {
-        val navController = findNavController()
-        binding.caughtListToolbar.setupWithNavController(navController)
-        binding.caughtListToolbar.setTitle(R.string.caught_pokemon_title)
+        activityToolbar?.let { toolbar ->
+            val navController = findNavController()
+            val appBarConfiguration = AppBarConfiguration(navController.graph)
+            toolbar.setupWithNavController(navController, appBarConfiguration)
+            toolbar.title = getString(R.string.caught_pokemon_title)
+            toolbar.visibility = View.VISIBLE
+        }
     }
 
     private fun setupRecyclerView() {

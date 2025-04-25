@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/detail_motion_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    app:layoutDescription="@xml/fragment_pokemon_detail_scene"
     tools:context=".ui.detail.PokemonDetailFragment">
 
-    <!-- TODO: Change Toolbar Color -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/detail_toolbar"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/center_guideline_horizontal"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/material_dynamic_primary40"
-        android:elevation="10dp"
-        android:theme="@style/ThemeOverlay.App.Toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.35" />
 
     <ProgressBar
         android:id="@+id/detail_loading_spinner"
@@ -36,36 +32,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
-        app:constraint_referenced_ids="detail_toolbar, detail_pokemon_image, detail_pokemon_name_text, types_label, detail_pokemon_types_text, stats_label, detail_pokemon_stats_text, height_label, detail_pokemon_height_text, weight_label, detail_pokemon_weight_text"
+        app:constraint_referenced_ids="detail_pokemon_name_text, types_label, detail_pokemon_types_text, stats_label, detail_pokemon_stats_text, height_label, detail_pokemon_height_text, weight_label, detail_pokemon_weight_text, catch_release_button"
         tools:visibility="visible" />
+
 
     <ImageView
         android:id="@+id/detail_pokemon_image"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginTop="16dp"
         android:contentDescription="@string/pokemon_sprite_image"
+        android:padding="16dp"
+        app:layout_constraintBottom_toTopOf="@id/center_guideline_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detail_toolbar"
         tools:src="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/detail_pokemon_name_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:textAppearance="?attr/textAppearanceHeadlineMedium"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detail_pokemon_image"
+        app:layout_constraintTop_toBottomOf="@id/center_guideline_horizontal"
         tools:text="Pikachu" />
 
     <TextView
         android:id="@+id/types_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/types_label"
         android:textAppearance="?attr/textAppearanceTitleMedium"
@@ -77,16 +77,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
         android:textAppearance="?attr/textAppearanceBodyMedium"
         app:layout_constraintBaseline_toBaselineOf="@id/types_label"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/types_label"
-        tools:text="Electric / Flying" />
+        app:layout_constraintStart_toEndOf="@id/types_label" />
 
     <TextView
         android:id="@+id/stats_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/stats_label"
         android:textAppearance="?attr/textAppearanceTitleMedium"
@@ -97,8 +98,9 @@
         android:id="@+id/detail_pokemon_stats_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:lineSpacingMultiplier="1.2"
         android:textAppearance="?attr/textAppearanceBodyMedium"
         app:layout_constraintEnd_toEndOf="parent"
@@ -110,6 +112,7 @@
         android:id="@+id/height_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/height_label"
         android:textAppearance="?attr/textAppearanceTitleMedium"
@@ -121,16 +124,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
         android:textAppearance="?attr/textAppearanceBodyMedium"
         app:layout_constraintBaseline_toBaselineOf="@id/height_label"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/height_label"
-        tools:text="0.4 m" />
+        app:layout_constraintStart_toEndOf="@id/height_label" />
 
     <TextView
         android:id="@+id/weight_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/weight_label"
         android:textAppearance="?attr/textAppearanceTitleMedium"
@@ -142,21 +146,24 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
         android:textAppearance="?attr/textAppearanceBodyMedium"
         app:layout_constraintBaseline_toBaselineOf="@id/weight_label"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/weight_label"
-        tools:text="6.0 kg" />
-
+        app:layout_constraintStart_toEndOf="@id/weight_label" />
 
     <Button
-        android:id="@+id/catch_release_Button"
+        android:id="@+id/catch_release_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="Catch / Release"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detail_pokemon_weight_text" />
+        app:layout_constraintTop_toBottomOf="@id/detail_pokemon_weight_text"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="Catch Pokemon" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

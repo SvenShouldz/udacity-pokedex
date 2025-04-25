@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.appbar.MaterialToolbar
 import com.shouldz.pokedex.R
 import com.shouldz.pokedex.data.model.PokemonResult
 import com.shouldz.pokedex.databinding.FragmentPokemonGridBinding
@@ -22,6 +23,8 @@ class PokemonGridFragment : Fragment() {
     private val viewModel: PokemonGridViewModel by viewModels()
     private lateinit var pokemonAdapter: PokemonGridAdapter
 
+    private var activityToolbar: MaterialToolbar? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,14 +36,26 @@ class PokemonGridFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        activityToolbar = activity?.findViewById(R.id.main_toolbar)
+
         setupRecyclerView()
         observeViewModel()
         setupSearchView()
+        setupToolbar()
+
         // Trigger initial data load
         viewModel.loadPokemonList()
 
         binding.caughtButton.setOnClickListener {
             findNavController().navigate(R.id.action_pokemonGridFragment_to_caughtListFragment)
+        }
+    }
+
+    private fun setupToolbar() {
+        activityToolbar?.apply {
+            title = getString(R.string.app_name)
+            navigationIcon = null
+            visibility = View.VISIBLE
         }
     }
 
