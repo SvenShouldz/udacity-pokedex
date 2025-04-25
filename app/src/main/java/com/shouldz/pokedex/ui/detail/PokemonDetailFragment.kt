@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.shouldz.pokedex.R
 import com.shouldz.pokedex.data.model.PokemonDetailResponse
@@ -38,14 +39,24 @@ class PokemonDetailFragment : Fragment() {
 
         val pokemonName = args.pokemonName
 
+        // Setuptoolbar
+        setupToolbar(pokemonName)
+
         // Observe changes from the ViewModel
         observeViewModel()
 
-        // load the details for this Pokemon
+        // Load the details for this Pokemon
         viewModel.loadPokemonDetail(pokemonName)
 
-        binding.navigateListButton.setOnClickListener {
-            findNavController().navigate(R.id.action_pokemonDetailFragment_to_pokemonListFragment)
+
+    }
+
+    private fun setupToolbar(pokemonName: String) {
+        val navController = findNavController()
+        binding.detailToolbar.setupWithNavController(navController)
+        binding.detailToolbar.setTitle(formatStatName(pokemonName))
+    }
+
         }
     }
 
