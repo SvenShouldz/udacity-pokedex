@@ -18,6 +18,7 @@ androidxConstraintlayout = "2.1.4"
 androidxLifecycle = "2.8.1"
 androidxNavigation = "2.7.7"
 androidxRoom = "2.6.1"
+androidxArchCore = "2.2.0"
 
 # --- Networking ---
 retrofit = "2.11.0"
@@ -71,6 +72,8 @@ material = { group = "com.google.android.material", name = "material", version.r
 junit = { module = "junit:junit", version.ref = "junit" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
+androidx-room-testing = { group = "androidx.room", name = "room-testing", version.ref = "androidxRoom" }
+androidx-arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "androidxArchCore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
