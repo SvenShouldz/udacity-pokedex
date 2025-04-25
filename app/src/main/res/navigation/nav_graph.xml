@@ -3,31 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/pokemonListFragment">
-
-    <fragment
-        android:id="@+id/pokemonListFragment"
-        android:name="com.shouldz.pokedex.ui.list.PokemonListFragment"
-        android:label="fragment_pokemon_list"
-        tools:layout="@layout/fragment_pokemon_list" >
-        <action
-            android:id="@+id/action_pokemonListFragment_to_caughtListFragment"
-            app:destination="@id/caughtListFragment" />
-        <action
-            android:id="@+id/action_pokemonListFragment_to_pokemonDetailFragment"
-            app:destination="@id/pokemonDetailFragment" />
-    </fragment>
+    app:startDestination="@id/pokemonGridFragment">
     <fragment
         android:id="@+id/pokemonDetailFragment"
         android:name="com.shouldz.pokedex.ui.detail.PokemonDetailFragment"
         android:label="fragment_pokemon_detail"
-        tools:layout="@layout/fragment_pokemon_detail" >
+        tools:layout="@layout/fragment_pokemon_detail">
         <action
             android:id="@+id/action_pokemonDetailFragment_to_caughtListFragment"
             app:destination="@id/caughtListFragment" />
-        <action
-            android:id="@+id/action_pokemonDetailFragment_to_pokemonListFragment"
-            app:destination="@id/pokemonListFragment" />
         <argument
             android:name="pokemonName"
             app:argType="string" />
@@ -36,12 +20,21 @@
         android:id="@+id/caughtListFragment"
         android:name="com.shouldz.pokedex.ui.caught.CaughtListFragment"
         android:label="fragment_caught_list"
-        tools:layout="@layout/fragment_caught_list" >
+        tools:layout="@layout/fragment_caught_list">
         <action
             android:id="@+id/action_caughtListFragment_to_pokemonDetailFragment"
             app:destination="@id/pokemonDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pokemonGridFragment"
+        android:name="com.shouldz.pokedex.ui.list.PokemonGridFragment"
+        android:label="fragment_pokemon_grid"
+        tools:layout="@layout/fragment_pokemon_grid" >
         <action
-            android:id="@+id/action_caughtListFragment_to_pokemonListFragment"
-            app:destination="@id/pokemonListFragment" />
+            android:id="@+id/action_pokemonGridFragment_to_caughtListFragment"
+            app:destination="@id/caughtListFragment" />
+        <action
+            android:id="@+id/action_pokemonGridFragment_to_pokemonDetailFragment"
+            app:destination="@id/pokemonDetailFragment" />
     </fragment>
 </navigation>

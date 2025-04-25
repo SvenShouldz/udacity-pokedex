@@ -7,4 +7,6 @@
     <string name="weight_label">Weight:</string>
     <string name="release_pokemon">Release</string>
     <string name="catch_pokemon">Catch</string>
+    <string name="caught_pokemon_title">Your Caught Pokemon!</string>
+    <string name="no_pokemon_caught">No Pokemon caught yet!</string>
 </resources>

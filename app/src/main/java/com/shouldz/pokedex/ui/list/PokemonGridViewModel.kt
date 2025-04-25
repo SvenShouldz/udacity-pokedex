@@ -5,13 +5,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shouldz.pokedex.data.model.PokemonResult
 import com.shouldz.pokedex.data.repository.PokemonRepository
 import kotlinx.coroutines.launch
 
-class PokemonListViewModel(application: Application) : AndroidViewModel(application) {
+class PokemonGridViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = PokemonRepository(application)
 

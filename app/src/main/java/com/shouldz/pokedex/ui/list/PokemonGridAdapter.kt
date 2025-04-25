@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.shouldz.pokedex.data.model.PokemonResult
 import com.shouldz.pokedex.databinding.ListItemPokemonBinding
 
-class PokemonListAdapter(private val onItemClicked: (PokemonResult) -> Unit) :
-    ListAdapter<PokemonResult, PokemonListAdapter.PokemonViewHolder>(PokemonDiffCallback()) {
+class PokemonGridAdapter(private val onItemClicked: (PokemonResult) -> Unit) :
+    ListAdapter<PokemonResult, PokemonGridAdapter.PokemonViewHolder>(PokemonDiffCallback()) {
 
     // ViewHolder class
     class PokemonViewHolder(private val binding: ListItemPokemonBinding) :

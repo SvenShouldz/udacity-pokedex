@@ -1,19 +1,25 @@
 package com.shouldz.pokedex.ui.caught
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.shouldz.pokedex.R
 import com.shouldz.pokedex.databinding.FragmentCaughtListBinding
-import com.shouldz.pokedex.databinding.FragmentPokemonDetailBinding
 
 class CaughtListFragment : Fragment() {
 
     private var _binding: FragmentCaughtListBinding? = null
     private val binding get() = _binding!! // Only valid between onCreateView and onDestroyView
+
+    private val viewModel: CaughtListViewModel by viewModels()
+
+    private lateinit var caughtAdapter: CaughtListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,11 +32,43 @@ class CaughtListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.navigateListButton.setOnClickListener {
-            findNavController().navigate(R.id.action_caughtListFragment_to_pokemonListFragment)
+        setupToolbar()
+        setupRecyclerView()
+        observeViewModel()
+    }
+
+    private fun setupToolbar() {
+        val navController = findNavController()
+        binding.caughtListToolbar.setupWithNavController(navController)
+        binding.caughtListToolbar.setTitle(R.string.caught_pokemon_title)
+    }
+
+    private fun setupRecyclerView() {
+        // Initialize the adapter
+        caughtAdapter = CaughtListAdapter()
+
+        binding.caughtPokemonRecyclerView.apply {
+            adapter = caughtAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            setHasFixedSize(true)
         }
-        binding.navigateDetailButton.setOnClickListener {
-            findNavController().navigate(R.id.action_caughtListFragment_to_pokemonDetailFragment)
+    }
+
+    private fun observeViewModel() {
+        viewModel.caughtPokemonList.observe(viewLifecycleOwner) { caughtList ->
+            caughtAdapter.submitList(caughtList)
+
+            binding.emptyListText.visibility = if (caughtList.isNullOrEmpty()) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+
+            binding.caughtPokemonRecyclerView.visibility = if (caughtList.isNullOrEmpty()) {
+                View.GONE
+            } else {
+                View.VISIBLE
+            }
         }
     }
 

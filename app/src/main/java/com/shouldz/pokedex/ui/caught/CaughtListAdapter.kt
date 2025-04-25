@@ -1,0 +1,52 @@
+package com.shouldz.pokedex.ui.caught
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.shouldz.pokedex.R
+import com.shouldz.pokedex.data.local.CaughtPokemon
+import com.shouldz.pokedex.databinding.ListItemCaughtPokemonBinding
+import com.shouldz.pokedex.util.capitalizeFirstLetter
+
+class CaughtListAdapter : ListAdapter<CaughtPokemon, CaughtListAdapter.CaughtPokemonViewHolder>(CaughtPokemonDiffCallback()) {
+
+    class CaughtPokemonViewHolder(private val binding: ListItemCaughtPokemonBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(caughtPokemon: CaughtPokemon) {
+            binding.apply {
+                // Set the Pokemon name (capitalized)
+                caughtPokemonNameText.text = capitalizeFirstLetter(caughtPokemon.name)
+
+                // Load the sprite image using Glide
+                Glide.with(itemView.context)
+                    .load(caughtPokemon.spriteUrl)
+                    .placeholder(R.drawable.ic_launcher_background) // TODO: Replace placeholder
+                    .error(R.drawable.ic_launcher_foreground) // TODO: Replace error drawable
+                    .into(caughtPokemonSpriteImage)
+            }
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CaughtPokemonViewHolder {
+        val binding = ListItemCaughtPokemonBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return CaughtPokemonViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: CaughtPokemonViewHolder, position: Int) {
+        val currentPokemon = getItem(position)
+        holder.bind(currentPokemon)
+    }
+
+    class CaughtPokemonDiffCallback : DiffUtil.ItemCallback<CaughtPokemon>() {
+        override fun areItemsTheSame(oldItem: CaughtPokemon, newItem: CaughtPokemon): Boolean {
+            return oldItem.name == newItem.name
+        }
+
+        override fun areContentsTheSame(oldItem: CaughtPokemon, newItem: CaughtPokemon): Boolean {
+            return oldItem == newItem
+        }
+    }
+}

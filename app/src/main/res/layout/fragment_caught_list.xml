@@ -6,42 +6,42 @@
     android:layout_height="match_parent"
     tools:context=".ui.caught.CaughtListFragment">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Pokemon Caught List"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@id/spacer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Space
-        android:id="@+id/spacer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/caught_list_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.App.Toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5" />
+        app:title="@string/caught_pokemon_title"
+        app:titleTextColor="?attr/colorOnPrimary" />
 
-    <Button
-        android:id="@+id/navigate_detail_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go to Detail"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/caught_pokemon_recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:padding="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/spacer" />
+        app:layout_constraintTop_toBottomOf="@id/caught_list_toolbar"
+        tools:listitem="@layout/list_item_caught_pokemon" />
 
-    <Button
-        android:id="@+id/navigate_list_button"
+    <TextView
+        android:id="@+id/empty_list_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go to List"
+        android:text="@string/no_pokemon_caught"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/navigate_detail_button" />
+        app:layout_constraintTop_toBottomOf="@id/caught_list_toolbar"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

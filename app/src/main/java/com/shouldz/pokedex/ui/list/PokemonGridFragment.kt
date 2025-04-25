@@ -9,22 +9,24 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.shouldz.pokedex.R
 import com.shouldz.pokedex.data.model.PokemonResult
-import com.shouldz.pokedex.databinding.FragmentPokemonListBinding
+import com.shouldz.pokedex.databinding.FragmentPokemonGridBinding
+import com.shouldz.pokedex.ui.list.PokemonGridFragmentDirections.Companion.actionPokemonGridFragmentToPokemonDetailFragment
 
-class PokemonListFragment : Fragment() {
+class PokemonGridFragment : Fragment() {
 
-    private var _binding: FragmentPokemonListBinding? = null
+    private var _binding: FragmentPokemonGridBinding? = null
     private val binding get() = _binding!! // Only valid between onCreateView and onDestroyView
 
-    private val viewModel: PokemonListViewModel by viewModels()
-    private lateinit var pokemonAdapter: PokemonListAdapter
+    private val viewModel: PokemonGridViewModel by viewModels()
+    private lateinit var pokemonAdapter: PokemonGridAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentPokemonListBinding.inflate(inflater, container, false)
+        _binding = FragmentPokemonGridBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -37,10 +39,13 @@ class PokemonListFragment : Fragment() {
         // Trigger initial data load
         viewModel.loadPokemonList()
 
+        binding.caughtButton.setOnClickListener {
+            findNavController().navigate(R.id.action_pokemonGridFragment_to_caughtListFragment)
+        }
     }
 
     private fun setupRecyclerView() {
-        pokemonAdapter = PokemonListAdapter { clickedPokemon ->
+        pokemonAdapter = PokemonGridAdapter { clickedPokemon ->
             navigateToDetail(clickedPokemon)
         }
         binding.pokemonRecyclerView.apply {
@@ -69,8 +74,8 @@ class PokemonListFragment : Fragment() {
 
     private fun navigateToDetail(pokemon: PokemonResult) {
         // Using Safe Args
-        val action = PokemonListFragmentDirections
-            .actionPokemonListFragmentToPokemonDetailFragment(pokemon.name) // Pass the name
+        val action = PokemonGridFragmentDirections
+            .actionPokemonGridFragmentToPokemonDetailFragment(pokemon.name)
         findNavController().navigate(action)
     }
 

@@ -14,6 +14,10 @@ import com.bumptech.glide.Glide
 import com.shouldz.pokedex.R
 import com.shouldz.pokedex.data.model.PokemonDetailResponse
 import com.shouldz.pokedex.databinding.FragmentPokemonDetailBinding
+import com.shouldz.pokedex.util.capitalizeFirstLetter
+import com.shouldz.pokedex.util.formatStatName
+import com.shouldz.pokedex.util.formatStatsList
+import com.shouldz.pokedex.util.formatTypeList
 import java.util.Locale
 
 class PokemonDetailFragment : Fragment() {
@@ -39,7 +43,7 @@ class PokemonDetailFragment : Fragment() {
 
         val pokemonName = args.pokemonName
 
-        // Setuptoolbar
+        // Setup toolbar
         setupToolbar(pokemonName)
 
         // Setup button
@@ -57,7 +61,6 @@ class PokemonDetailFragment : Fragment() {
     private fun setupToolbar(pokemonName: String) {
         val navController = findNavController()
         binding.detailToolbar.setupWithNavController(navController)
-        binding.detailToolbar.setTitle(formatStatName(pokemonName))
     }
 
     private fun setupCatchReleaseButton() {
@@ -78,6 +81,7 @@ class PokemonDetailFragment : Fragment() {
             if (detail != null) {
                 bindData(detail)
                 binding.contentGroup.visibility = View.VISIBLE
+                binding.detailToolbar.title = capitalizeFirstLetter(detail.name)
             } else {
                 if (viewModel.isLoading.value == false) {
                     binding.contentGroup.visibility =
@@ -109,9 +113,7 @@ class PokemonDetailFragment : Fragment() {
     private fun bindData(detail: PokemonDetailResponse) {
         binding.apply {
             // Set Name (Capitalized)
-            detailPokemonNameText.text = detail.name.replaceFirstChar {
-                if (it.isLowerCase()) it.titlecase() else it.toString()
-            }
+            detailPokemonNameText.text = capitalizeFirstLetter(detail.name)
 
             // Load Image using Glide
             Glide.with(this@PokemonDetailFragment)
@@ -120,17 +122,11 @@ class PokemonDetailFragment : Fragment() {
                 .error(R.drawable.ic_launcher_foreground) // TODO: Replace with a proper error drawable
                 .into(detailPokemonImage)
 
-
-            detailPokemonTypesText.text = detail.types.joinToString(" / ") { typeSlot ->
-                typeSlot.type.name.replaceFirstChar { it.titlecase() }
-            }
+            // Set Types
+            detailPokemonTypesText.text = formatTypeList(detail.types)
 
             // Set Stats
-            detailPokemonStatsText.text = detail.stats.joinToString("\n") { statSlot ->
-                val name = formatStatName(statSlot.stat.name)
-                val value = statSlot.baseStat
-                "$name: $value"
-            }
+            detailPokemonStatsText.text = formatStatsList(detail.stats)
 
             // Set Height (Convert decimetres to meters)
             val heightInMeters = detail.height / 10.0
@@ -141,14 +137,6 @@ class PokemonDetailFragment : Fragment() {
 
             detailPokemonWeightText.text = String.format(Locale.getDefault(), "%.1f kg", weightInKilograms)
 
-        }
-    }
-
-    private fun formatStatName(rawStatName: String): String {
-        return rawStatName.split("-").joinToString(" ") { word ->
-            word.replaceFirstChar {
-                if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
-            }
         }
     }
 
