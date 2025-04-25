@@ -1,16 +1,20 @@
 package com.shouldz.pokedex.ui.detail
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
+import com.shouldz.pokedex.data.local.CaughtPokemon
 import com.shouldz.pokedex.data.model.PokemonDetailResponse
 import com.shouldz.pokedex.data.repository.PokemonRepository
 import kotlinx.coroutines.launch
 
-class PokemonDetailViewModel : ViewModel() {
+class PokemonDetailViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = PokemonRepository()
+    private val repository = PokemonRepository(application)
 
     private val _pokemonDetail = MutableLiveData<PokemonDetailResponse?>()
     val pokemonDetail: LiveData<PokemonDetailResponse?> get() = _pokemonDetail
@@ -20,6 +24,18 @@ class PokemonDetailViewModel : ViewModel() {
 
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> get() = _error
+
+    private val isCaughtObject: LiveData<CaughtPokemon?> = _pokemonDetail.switchMap { detail ->
+        if (detail == null) {
+            MutableLiveData<CaughtPokemon?>(null) // If no detail loaded, return null
+        } else {
+            repository.isPokemonCaught(detail.name)
+        }
+    }
+
+    val isCaught: LiveData<Boolean> = isCaughtObject.map { caughtPokemon ->
+        caughtPokemon != null // Map non-null to true, null to false
+    }
 
     fun loadPokemonDetail(pokemonName: String) {
         // Don't reload if already loading or data exists
@@ -49,10 +65,33 @@ class PokemonDetailViewModel : ViewModel() {
         }
     }
 
+    fun onCatchReleaseClicked() {
+        val currentDetail = _pokemonDetail.value ?: return
+
+        viewModelScope.launch {
+            if (isCaught.value == true) {
+                // Release Pokemon
+                try {
+                    repository.releasePokemon(currentDetail.name)
+                } catch (e: Exception) {
+                    _error.value = "Failed to release ${currentDetail.name}"
+                }
+            } else {
+                // Catch Pokemon
+                val spriteUrl = currentDetail.sprites.frontDefault ?: ""
+                val pokemonToCatch = CaughtPokemon(name = currentDetail.name, spriteUrl = spriteUrl)
+
+                try {
+                    repository.catchPokemon(pokemonToCatch)
+                } catch (e: Exception) {
+                    _error.value = "Failed to catch ${currentDetail.name}"
+                }
+            }
+        }
+    }
+
     fun onErrorShown() {
         _error.value = null
     }
-
-    // --- TODO: Add logic for Catch/Release button later ---
 
 }

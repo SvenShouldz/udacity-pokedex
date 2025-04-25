@@ -1,5 +1,7 @@
 package com.shouldz.pokedex.ui.list
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,9 +11,9 @@ import com.shouldz.pokedex.data.model.PokemonResult
 import com.shouldz.pokedex.data.repository.PokemonRepository
 import kotlinx.coroutines.launch
 
-class PokemonListViewModel : ViewModel() {
+class PokemonListViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = PokemonRepository()
+    private val repository = PokemonRepository(application)
 
     private val _filteredPokemonList = MediatorLiveData<List<PokemonResult>>()
     val filteredPokemonList: LiveData<List<PokemonResult>> get() = _filteredPokemonList

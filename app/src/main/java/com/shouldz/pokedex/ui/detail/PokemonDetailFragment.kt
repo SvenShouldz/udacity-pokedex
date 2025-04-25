@@ -42,6 +42,9 @@ class PokemonDetailFragment : Fragment() {
         // Setuptoolbar
         setupToolbar(pokemonName)
 
+        // Setup button
+        setupCatchReleaseButton()
+
         // Observe changes from the ViewModel
         observeViewModel()
 
@@ -57,6 +60,9 @@ class PokemonDetailFragment : Fragment() {
         binding.detailToolbar.setTitle(formatStatName(pokemonName))
     }
 
+    private fun setupCatchReleaseButton() {
+        binding.catchReleaseButton.setOnClickListener {
+            viewModel.onCatchReleaseClicked()
         }
     }
 
@@ -78,6 +84,16 @@ class PokemonDetailFragment : Fragment() {
                         View.INVISIBLE
                 }
             }
+        }
+
+        viewModel.isCaught.observe(viewLifecycleOwner) { isCaught ->
+            // Update button text based on caught status
+            binding.catchReleaseButton.text = if (isCaught) {
+                getString(R.string.release_pokemon)
+            } else {
+                getString(R.string.catch_pokemon)
+            }
+            // TODO: Add different color states
         }
 
         // Observe error messages
@@ -125,7 +141,6 @@ class PokemonDetailFragment : Fragment() {
 
             detailPokemonWeightText.text = String.format(Locale.getDefault(), "%.1f kg", weightInKilograms)
 
-            // TODO: Update Catch/Release button state based on local DB later
         }
     }
 
