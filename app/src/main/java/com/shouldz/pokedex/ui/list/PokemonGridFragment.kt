@@ -1,9 +1,11 @@
 package com.shouldz.pokedex.ui.list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -39,13 +41,21 @@ class PokemonGridFragment : Fragment() {
         activityToolbar = activity?.findViewById(R.id.main_toolbar)
 
         setupRecyclerView()
-        observeViewModel()
         setupSearchView()
         setupToolbar()
+        setupListeners()
+        observeViewModel()
 
         // Trigger initial data load
-        viewModel.loadPokemonList()
+        if (viewModel.filteredPokemonList.value.isNullOrEmpty() && viewModel.error.value == null) {
+            viewModel.loadPokemonList()
+        }
+    }
 
+    private fun setupListeners() {
+        binding.gridRetryButton.setOnClickListener {
+            viewModel.retryLoadList()
+        }
         binding.caughtButton.setOnClickListener {
             findNavController().navigate(R.id.action_pokemonGridFragment_to_caughtListFragment)
         }
@@ -96,23 +106,49 @@ class PokemonGridFragment : Fragment() {
 
     private fun observeViewModel() {
         viewModel.filteredPokemonList.observe(viewLifecycleOwner) { filteredList ->
-            // Submit list to adapter when it changes
-            pokemonAdapter.submitList(filteredList)
+            if (filteredList.isNotEmpty()) {
+                pokemonAdapter.submitList(filteredList)
+                // List has data, show RecyclerView, hide error view
+                binding.pokemonRecyclerView.visibility = View.VISIBLE
+                binding.searchView.visibility = View.VISIBLE
+                binding.gridErrorView.visibility = View.GONE
+            }else{
+                // List is empty, hide RecyclerView, show error view
+                binding.pokemonRecyclerView.visibility = View.GONE
+                binding.searchView.visibility = View.GONE
+                binding.gridErrorView.visibility = View.VISIBLE
+            }
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            // Show/hide the progress bar based on loading state
-            val visibility = if (isLoading) {
-                View.VISIBLE
-            } else {
-                View.GONE
+            // Show/hide the spinner based on loading state
+            binding.loadingSpinner.visibility = if (isLoading) View.VISIBLE else View.GONE
+            if (isLoading) {
+                // Hide everything else when loading
+                binding.pokemonRecyclerView.visibility = View.GONE
+                binding.searchView.visibility = View.GONE
+                binding.gridErrorView.visibility = View.GONE
             }
-            binding.loadingSpinner.visibility = visibility
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
+            if (errorMessage != null) {
+                binding.gridErrorView.visibility = View.VISIBLE
+                binding.gridErrorText.text = errorMessage
+                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+                viewModel.onErrorShown()
+            } else {
+                // No error message and not loading
+                if (viewModel.filteredPokemonList.value?.isNotEmpty() == true) {
+                    binding.gridErrorView.visibility = View.GONE
+                }
+            }
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.pokemonRecyclerView.adapter = null
         _binding = null // Avoid memory leaks
     }
 }

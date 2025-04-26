@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,14 +18,12 @@ import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.appbar.MaterialToolbar
 import com.shouldz.pokedex.R
 import com.shouldz.pokedex.data.model.PokemonDetailResponse
 import com.shouldz.pokedex.databinding.FragmentPokemonDetailBinding
 import com.shouldz.pokedex.util.NotificationUtils
 import com.shouldz.pokedex.util.capitalizeFirstLetter
-import com.shouldz.pokedex.util.formatStatName
 import com.shouldz.pokedex.util.formatStatsList
 import com.shouldz.pokedex.util.formatTypeList
 import java.util.Locale
@@ -118,13 +117,11 @@ class PokemonDetailFragment : Fragment() {
                 ) == PackageManager.PERMISSION_GRANTED -> {
                     catchPokemonAndNotify()
                 }
+
                 shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
-                    // Show an explanation to the user *asynchronously* before requesting again
-                    // (e.g., in a dialog). For simplicity here, we'll just request directly.
-                    // Consider adding a dialog here for better UX.
                     requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
-                // Permission has not been asked for yet or was denied without "Don't ask again"
+
                 else -> {
                     // Directly ask for the permission
                     requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
@@ -143,44 +140,47 @@ class PokemonDetailFragment : Fragment() {
     }
 
     private fun observeViewModel() {
+        // Observer for loading state
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.detailLoadingSpinner.visibility = if (isLoading) View.VISIBLE else View.GONE
-            // Hide content while loading
-            binding.contentGroup.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
-        }
+            // When loading starts, hide content and error
+            if (isLoading) {
+                binding.pokemonErrorText.text = ""
+                binding.contentGroup.visibility = View.INVISIBLE
 
-        // Observe Pokemon details
+            }
+        }
+        // Observer for Pokemon details (Success state)
         viewModel.pokemonDetail.observe(viewLifecycleOwner) { detail ->
+            activityToolbar?.title = getString(R.string.finding_pokemon)
             if (detail != null) {
+                // Success: Bind data, show content, hide error
+                binding.pokemonErrorText.text = ""
                 bindData(detail)
                 binding.contentGroup.visibility = View.VISIBLE
+
                 activityToolbar?.title = capitalizeFirstLetter(detail.name)
-            } else {
-                if (viewModel.isLoading.value == false) {
-                    binding.contentGroup.visibility =
-                        View.INVISIBLE
-                    // Reset image to placeholder if details fail to load after trying
-                    binding.detailPokemonImage.setImageResource(R.drawable.ic_pokeball_placeholder)
-                }
-                activityToolbar?.title = getString(R.string.pokemon_not_found)
             }
         }
 
+        // Observer for caught status
         viewModel.isCaught.observe(viewLifecycleOwner) { isCaught ->
-            // Update button text based on caught status
             binding.catchReleaseButton.text = if (isCaught) {
                 getString(R.string.release_pokemon)
             } else {
                 getString(R.string.catch_pokemon)
             }
-            // TODO: Add different color states
         }
 
-        // Observe error messages
+        // Observer for error messages (Error state)
         viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
-            errorMessage?.let {
-                // simple Toast message for the error
-                Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+            if (errorMessage != null) {
+                binding.pokemonErrorText.text = errorMessage
+                binding.contentGroup.visibility = View.INVISIBLE
+
+                activityToolbar?.title = getString(R.string.pokemon_not_found)
+                // Show Toast
+                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
                 viewModel.onErrorShown()
             }
         }
@@ -205,15 +205,31 @@ class PokemonDetailFragment : Fragment() {
 
             // Set Height (Convert decimetres to meters)
             val heightInMeters = detail.height / 10.0
-            detailPokemonHeightText.text = String.format(Locale.getDefault(), "%.1f m", heightInMeters)
+            detailPokemonHeightText.text =
+                String.format(Locale.getDefault(), "%.1f m", heightInMeters)
 
             // Set Weight (Convert hectograms to kilograms)
             val weightInKilograms = detail.weight / 10.0
 
-            detailPokemonWeightText.text = String.format(Locale.getDefault(), "%.1f kg", weightInKilograms)
+            detailPokemonWeightText.text =
+                String.format(Locale.getDefault(), "%.1f kg", weightInKilograms)
 
         }
     }
+//
+//    private fun setContentItemsVisibility(visibility: Int) {
+//        // Set visibility for ALL content views
+//        binding.detailPokemonNameText.visibility = visibility
+//        binding.typesLabel.visibility = visibility
+//        binding.detailPokemonTypesText.visibility = visibility
+//        binding.statsLabel.visibility = visibility
+//        binding.detailPokemonStatsText.visibility = visibility
+//        binding.heightLabel.visibility = visibility
+//        binding.detailPokemonHeightText.visibility = visibility
+//        binding.weightLabel.visibility = visibility
+//        binding.detailPokemonWeightText.visibility = visibility
+//        binding.catchReleaseButton.visibility = visibility
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

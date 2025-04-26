@@ -9,6 +9,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -24,6 +25,7 @@ object NotificationUtils {
 
     const val EXTRA_DESTINATION = "NAVIGATE_TO_DESTINATION"
     const val DESTINATION_CAUGHT_LIST = "caught_list"
+    const val TAG = "NotificationUtils"
 
     fun createNotificationChannel(context: Context) {
         val descriptionText = "Notifications shown when a Pokemon is caught"
@@ -48,7 +50,7 @@ object NotificationUtils {
                     Manifest.permission.POST_NOTIFICATIONS
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
-                println("POST_NOTIFICATIONS permission not granted. Cannot send notification.")
+                Log.e(TAG, "POST_NOTIFICATIONS permission not granted. Cannot send notification.")
                 Toast.makeText(context, "Notification permission needed", Toast.LENGTH_SHORT).show()
                 return
             }
@@ -92,7 +94,7 @@ object NotificationUtils {
         try {
             NotificationManagerCompat.from(context).notify(notificationId, builder.build())
         } catch (e: SecurityException) {
-            println("Missing POST_NOTIFICATIONS permission ${e.message}")
+            Log.e(TAG,"Missing POST_NOTIFICATIONS permission ${e.message}")
         }
     }
 }

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/detail_motion_layout"
+    android:id="@+id/detail_root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layoutDescription="@xml/fragment_pokemon_detail_scene"
     tools:context=".ui.detail.PokemonDetailFragment">
 
     <androidx.constraintlayout.widget.Guideline
@@ -14,6 +13,27 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.35" />
+
+    <TextView
+        android:id="@+id/pokemon_error_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:text="@string/error_loading_details"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        android:textColor="?attr/colorError"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/center_guideline_horizontal"/>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/content_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:constraint_referenced_ids="detail_pokemon_name_text, types_label, detail_pokemon_types_text, stats_label, detail_pokemon_stats_text, height_label, detail_pokemon_height_text, weight_label, detail_pokemon_weight_text, catch_release_button"
+        tools:visibility="visible" />
 
     <ProgressBar
         android:id="@+id/detail_loading_spinner"
@@ -27,25 +47,29 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/content_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        app:constraint_referenced_ids="detail_pokemon_name_text, types_label, detail_pokemon_types_text, stats_label, detail_pokemon_stats_text, height_label, detail_pokemon_height_text, weight_label, detail_pokemon_weight_text, catch_release_button"
-        tools:visibility="visible" />
-
-
-    <ImageView
-        android:id="@+id/detail_pokemon_image"
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/image_motion_layout"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:contentDescription="@string/pokemon_sprite_image"
-        android:padding="16dp"
+        app:layoutDescription="@xml/fragment_pokemon_detail_scene"
         app:layout_constraintBottom_toTopOf="@id/center_guideline_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:src="@tools:sample/avatars" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/detail_pokemon_image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:contentDescription="@string/pokemon_sprite_image"
+            android:padding="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/avatars" />
+
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+
 
     <TextView
         android:id="@+id/detail_pokemon_name_text"
@@ -165,5 +189,4 @@
         app:layout_constraintVertical_bias="0.0"
         tools:text="Catch Pokemon" />
 
-
-</androidx.constraintlayout.motion.widget.MotionLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

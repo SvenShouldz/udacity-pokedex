@@ -1,11 +1,13 @@
 package com.shouldz.pokedex.ui.list
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.shouldz.pokedex.R
 import com.shouldz.pokedex.data.model.PokemonResult
 import com.shouldz.pokedex.data.repository.PokemonRepository
 import kotlinx.coroutines.launch
@@ -13,6 +15,7 @@ import kotlinx.coroutines.launch
 class PokemonGridViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = PokemonRepository(application)
+    private val app = application
 
     private val _filteredPokemonList = MediatorLiveData<List<PokemonResult>>()
     val filteredPokemonList: LiveData<List<PokemonResult>> get() = _filteredPokemonList
@@ -20,6 +23,10 @@ class PokemonGridViewModel(application: Application) : AndroidViewModel(applicat
     // Holds the loading state (true when loading, false otherwise)
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
+
+    // Handling errors
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> get() = _error
 
     // Holds unfiltered list fetched from API
     private val _originalPokemonList = MutableLiveData<List<PokemonResult>>()
@@ -29,6 +36,7 @@ class PokemonGridViewModel(application: Application) : AndroidViewModel(applicat
     companion object {
         private const val POKEMON_LIMIT = 151 // Fetch first 151 Pokemon (Gen 1)
         private const val POKEMON_OFFSET = 0
+        private const val TAG = "PokemonGridViewModel"
     }
 
     init {
@@ -47,6 +55,7 @@ class PokemonGridViewModel(application: Application) : AndroidViewModel(applicat
         }
 
         _isLoading.value = true
+        _error.value = null
 
         viewModelScope.launch {
             try {
@@ -55,13 +64,24 @@ class PokemonGridViewModel(application: Application) : AndroidViewModel(applicat
                 _originalPokemonList.value = results
             } catch (e: Exception) {
                 // Handle error
-                println("Exception in ViewModel: ${e.message}")
+                Log.e(TAG,"Exception in ViewModel: ${e.message}")
+                _error.value = app.getString(R.string.error_network_connection)
                 _originalPokemonList.value = emptyList()
             } finally {
                 // Set loading state to false after fetching
                 _isLoading.value = false
             }
         }
+    }
+
+    fun retryLoadList() {
+        // Clear the current list to ensure loadPokemonList fetches again
+        _originalPokemonList.value = emptyList()
+        loadPokemonList()
+    }
+
+    fun onErrorShown() {
+        _error.value = null
     }
 
     fun setSearchQuery(query: String) {

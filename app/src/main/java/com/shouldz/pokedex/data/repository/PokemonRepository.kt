@@ -1,6 +1,7 @@
 package com.shouldz.pokedex.data.repository
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.shouldz.pokedex.data.local.AppDatabase
 import com.shouldz.pokedex.data.local.CaughtPokemon
@@ -13,6 +14,10 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 
 class PokemonRepository(application: Application) {
+
+    companion object {
+        private const val TAG = "PokemonRepository"
+    }
 
     // Get the API service instance from ApiClient
     private val pokemonApiService = ApiClient.api
@@ -32,10 +37,10 @@ class PokemonRepository(application: Application) {
                 val response = pokemonApiService.getPokemonList(limit = limit, offset = offset)
                 response.results
             } catch (e: IOException) {
-                println("Network error fetching Pokemon list: ${e.message}")
+                Log.e(TAG, "Network error fetching Pokemon list: ${e.message}")
                 emptyList<PokemonResult>()
             } catch (e: Exception) {
-                println("Error fetching Pokemon list: ${e.message}")
+                Log.e(TAG,"Error fetching Pokemon list: ${e.message}")
                 emptyList<PokemonResult>()
             }
         }
@@ -47,10 +52,10 @@ class PokemonRepository(application: Application) {
             try {
                 pokemonApiService.getPokemonDetail(name = name.lowercase())
             } catch (e: IOException) {
-                println("Network error fetching Pokemon detail for $name: ${e.message}")
+                Log.e(TAG,"Network error fetching Pokemon detail for $name: ${e.message}")
                 null // Return null on network error
             } catch (e: Exception) {
-                println("Error fetching Pokemon detail for $name: ${e.message}")
+                Log.e(TAG,"Error fetching Pokemon detail for $name: ${e.message}")
                 null // Return null on other errors
             }
         }

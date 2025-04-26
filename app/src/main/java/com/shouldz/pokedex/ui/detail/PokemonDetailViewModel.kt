@@ -1,12 +1,14 @@
 package com.shouldz.pokedex.ui.detail
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
+import com.shouldz.pokedex.R
 import com.shouldz.pokedex.data.local.CaughtPokemon
 import com.shouldz.pokedex.data.model.PokemonDetailResponse
 import com.shouldz.pokedex.data.repository.PokemonRepository
@@ -14,7 +16,12 @@ import kotlinx.coroutines.launch
 
 class PokemonDetailViewModel(application: Application) : AndroidViewModel(application) {
 
+    companion object {
+        private const val TAG = "PokemonDetailViewModel"
+    }
+
     private val repository = PokemonRepository(application)
+    private val app = application
 
     private val _pokemonDetail = MutableLiveData<PokemonDetailResponse?>()
     val pokemonDetail: LiveData<PokemonDetailResponse?> get() = _pokemonDetail
@@ -53,11 +60,10 @@ class PokemonDetailViewModel(application: Application) : AndroidViewModel(applic
                 _pokemonDetail.value = detail
                 if (detail == null) {
                     // If repository returned null
-                    _error.value = "Failed to load details for $pokemonName"
+                    _error.value = app.getString(R.string.failed_to_load_details, pokemonName)
                 }
             } catch (e: Exception) {
-                println("Exception in DetailViewModel: ${e.message}")
-                _error.value = "An unexpected error occurred."
+                Log.e(TAG, "Exception: ${e.message}")
                 _pokemonDetail.value = null
             } finally {
                 _isLoading.value = false
@@ -74,7 +80,7 @@ class PokemonDetailViewModel(application: Application) : AndroidViewModel(applic
                 try {
                     repository.releasePokemon(currentDetail.name)
                 } catch (e: Exception) {
-                    _error.value = "Failed to release ${currentDetail.name}"
+                    _error.value = app.getString(R.string.failed_to_release, currentDetail.name)
                 }
             } else {
                 // Catch Pokemon
@@ -84,7 +90,7 @@ class PokemonDetailViewModel(application: Application) : AndroidViewModel(applic
                 try {
                     repository.catchPokemon(pokemonToCatch)
                 } catch (e: Exception) {
-                    _error.value = "Failed to catch ${currentDetail.name}"
+                    _error.value = app.getString(R.string.failed_to_catch, currentDetail.name)
                 }
             }
         }
