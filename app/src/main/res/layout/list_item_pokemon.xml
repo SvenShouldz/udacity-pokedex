@@ -14,17 +14,28 @@
         android:layout_height="wrap_content"
         android:padding="8dp">
 
+        <ImageView
+            android:id="@+id/pokemon_sprite_image"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:contentDescription="@string/pokemon_sprite_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_pokeball_placeholder" />
+
         <TextView
             android:id="@+id/pokemon_name_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:gravity="center"
             android:textAppearance="?attr/textAppearanceBodyMedium"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pokemon_sprite_image"
             tools:text="Bulbasaur" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
