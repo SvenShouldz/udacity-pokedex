@@ -1,10 +1,15 @@
 package com.shouldz.pokedex.ui.detail
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -17,6 +22,7 @@ import com.google.android.material.appbar.MaterialToolbar
 import com.shouldz.pokedex.R
 import com.shouldz.pokedex.data.model.PokemonDetailResponse
 import com.shouldz.pokedex.databinding.FragmentPokemonDetailBinding
+import com.shouldz.pokedex.util.NotificationUtils
 import com.shouldz.pokedex.util.capitalizeFirstLetter
 import com.shouldz.pokedex.util.formatStatName
 import com.shouldz.pokedex.util.formatStatsList
@@ -31,6 +37,23 @@ class PokemonDetailFragment : Fragment() {
     private val viewModel: PokemonDetailViewModel by viewModels()
 
     private var activityToolbar: MaterialToolbar? = null
+
+    // Permission Request for Notifications
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                // Permission granted!
+                catchPokemonAndNotify()
+            } else {
+                // Permission denied!
+                Toast.makeText(
+                    context,
+                    "Notification permission denied. Cannot show catch notifications.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                viewModel.onCatchReleaseClicked()
+            }
+        }
 
     // Safe Args
     private val args: PokemonDetailFragmentArgs by navArgs()
@@ -47,22 +70,18 @@ class PokemonDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val pokemonName = args.pokemonName
-
         activityToolbar = activity?.findViewById(R.id.main_toolbar)
 
         // Setup toolbar
         setupToolbar()
-
         // Setup button
         setupCatchReleaseButton()
-
         // Observe changes from the ViewModel
         observeViewModel()
-
         // Load the details for this Pokemon
-        viewModel.loadPokemonDetail(pokemonName)
+        if (viewModel.pokemonDetail.value == null) {
+            viewModel.loadPokemonDetail(args.pokemonName)
+        }
     }
 
     private fun setupToolbar() {
@@ -76,8 +95,51 @@ class PokemonDetailFragment : Fragment() {
 
     private fun setupCatchReleaseButton() {
         binding.catchReleaseButton.setOnClickListener {
-            viewModel.onCatchReleaseClicked()
+            val isCurrentlyCaught = viewModel.isCaught.value ?: false // Get current state
+
+            if (isCurrentlyCaught) {
+                // If already caught, just release (no permission needed)
+                viewModel.onCatchReleaseClicked()
+            } else {
+                // If not caught, check/request permission before catching
+                checkAndRequestNotificationPermission()
+            }
         }
+    }
+
+    private fun checkAndRequestNotificationPermission() {
+        // Check only needed on Android 13 (API 33) and above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            when {
+                // Check if permission is already granted
+                ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED -> {
+                    catchPokemonAndNotify()
+                }
+                shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
+                    // Show an explanation to the user *asynchronously* before requesting again
+                    // (e.g., in a dialog). For simplicity here, we'll just request directly.
+                    // Consider adding a dialog here for better UX.
+                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+                // Permission has not been asked for yet or was denied without "Don't ask again"
+                else -> {
+                    // Directly ask for the permission
+                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+            }
+        } else {
+            // Permission not needed for versions below Android 13
+            catchPokemonAndNotify()
+        }
+    }
+
+    private fun catchPokemonAndNotify() {
+        viewModel.onCatchReleaseClicked()
+        val pokemonName = args.pokemonName
+        NotificationUtils.sendPokemonCaughtNotification(requireContext(), pokemonName)
     }
 
     private fun observeViewModel() {

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/pokemonGridFragment">
+    <action android:id="@+id/action_global_caughtListFragment" app:destination="@id/caughtListFragment"/>
     <fragment
         android:id="@+id/pokemonDetailFragment"
         android:name="com.shouldz.pokedex.ui.detail.PokemonDetailFragment"

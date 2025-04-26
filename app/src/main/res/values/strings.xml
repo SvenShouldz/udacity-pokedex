@@ -11,4 +11,6 @@
     <string name="no_pokemon_caught">No Pokemon caught yet!</string>
     <string name="caught_pokemon_button">Caught Pokemon</string>
     <string name="pokemon_not_found">Pokemon not found</string>
+    <string name="notification_text">%1$s was added to your collection!</string>
+    <string name="notification_title">%1$s Caught!</string>
 </resources>
