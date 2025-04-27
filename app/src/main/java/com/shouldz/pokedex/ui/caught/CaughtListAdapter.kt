@@ -9,15 +9,22 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.shouldz.pokedex.R
 import com.shouldz.pokedex.data.local.CaughtPokemon
-import com.shouldz.pokedex.data.model.PokemonResult
 import com.shouldz.pokedex.databinding.ListItemCaughtPokemonBinding
 import com.shouldz.pokedex.util.capitalizeFirstLetter
 
-class CaughtListAdapter(private val onItemClicked: (CaughtPokemon) -> Unit) : ListAdapter<CaughtPokemon, CaughtListAdapter.CaughtPokemonViewHolder>(CaughtPokemonDiffCallback()) {
+class CaughtListAdapter(
+    private val onItemClicked: (CaughtPokemon) -> Unit,
+    private val onReleaseClicked: (CaughtPokemon) -> Unit
+) : ListAdapter<CaughtPokemon, CaughtListAdapter.CaughtPokemonViewHolder>(CaughtPokemonDiffCallback()) {
 
-    class CaughtPokemonViewHolder(private val binding: ListItemCaughtPokemonBinding) : RecyclerView.ViewHolder(binding.root) {
+    class CaughtPokemonViewHolder(private val binding: ListItemCaughtPokemonBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(caughtPokemon: CaughtPokemon, listener: (CaughtPokemon) -> Unit) {
+        fun bind(
+            caughtPokemon: CaughtPokemon,
+            onItemClicked: (CaughtPokemon) -> Unit,
+            onReleaseClicked: (CaughtPokemon) -> Unit
+        ) {
             binding.apply {
                 // Set the Pokemon name (capitalized)
                 caughtPokemonNameText.text = capitalizeFirstLetter(caughtPokemon.name)
@@ -31,19 +38,23 @@ class CaughtListAdapter(private val onItemClicked: (CaughtPokemon) -> Unit) : Li
                     .into(caughtPokemonSpriteImage)
             }
             binding.root.setOnClickListener {
-                listener(caughtPokemon)
+                onItemClicked(caughtPokemon)
+            }
+            binding.releaseButton.setOnClickListener {
+                onReleaseClicked(caughtPokemon)
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CaughtPokemonViewHolder {
-        val binding = ListItemCaughtPokemonBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ListItemCaughtPokemonBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return CaughtPokemonViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CaughtPokemonViewHolder, position: Int) {
         val currentPokemon = getItem(position)
-        holder.bind(currentPokemon, onItemClicked)
+        holder.bind(currentPokemon, onItemClicked, onReleaseClicked)
     }
 
     class CaughtPokemonDiffCallback : DiffUtil.ItemCallback<CaughtPokemon>() {

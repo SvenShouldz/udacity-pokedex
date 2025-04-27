@@ -38,10 +38,10 @@ class PokemonRepository(application: Application) {
                 response.results
             } catch (e: IOException) {
                 Log.e(TAG, "Network error fetching Pokemon list: ${e.message}")
-                emptyList<PokemonResult>()
+                throw e
             } catch (e: Exception) {
                 Log.e(TAG,"Error fetching Pokemon list: ${e.message}")
-                emptyList<PokemonResult>()
+                throw e
             }
         }
     }

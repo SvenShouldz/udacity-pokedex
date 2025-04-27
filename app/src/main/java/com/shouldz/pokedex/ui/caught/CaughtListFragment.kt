@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -57,9 +58,27 @@ class CaughtListFragment : Fragment() {
 
     private fun setupRecyclerView() {
         // Initialize the adapter
-        caughtAdapter = CaughtListAdapter { clickedPokemon ->
-            navigateToDetail(clickedPokemon)
-        }
+        caughtAdapter = CaughtListAdapter(
+            onItemClicked = { caughtPokemon ->
+                navigateToDetail(caughtPokemon)
+            },
+            onReleaseClicked = { caughtPokemon ->
+                try{
+                    viewModel.releasePokemon(caughtPokemon.name)
+                    Toast.makeText(
+                        context,
+                        getString(R.string.got_released, caughtPokemon.name),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }catch (e: Exception){
+                    Toast.makeText(
+                        context,
+                        getString(R.string.failed_to_release, caughtPokemon.name),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        )
 
         binding.caughtPokemonRecyclerView.apply {
             adapter = caughtAdapter

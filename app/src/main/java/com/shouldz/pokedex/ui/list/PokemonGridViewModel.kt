@@ -10,7 +10,9 @@ import androidx.lifecycle.viewModelScope
 import com.shouldz.pokedex.R
 import com.shouldz.pokedex.data.model.PokemonResult
 import com.shouldz.pokedex.data.repository.PokemonRepository
+import com.shouldz.pokedex.data.repository.PokemonRepository.Companion
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 class PokemonGridViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -30,6 +32,7 @@ class PokemonGridViewModel(application: Application) : AndroidViewModel(applicat
 
     // Holds unfiltered list fetched from API
     private val _originalPokemonList = MutableLiveData<List<PokemonResult>>()
+    val originalPokemonList: LiveData<List<PokemonResult>> get() = _originalPokemonList
 
     private val _searchQuery = MutableLiveData<String>("")
 
@@ -62,10 +65,12 @@ class PokemonGridViewModel(application: Application) : AndroidViewModel(applicat
                 val results =
                     repository.getPokemonList(limit = POKEMON_LIMIT, offset = POKEMON_OFFSET)
                 _originalPokemonList.value = results
+            }catch (e: IOException) {
+                _error.value = app.getString(R.string.error_network_connection)
+                _originalPokemonList.value = emptyList()
             } catch (e: Exception) {
                 // Handle error
                 Log.e(TAG,"Exception in ViewModel: ${e.message}")
-                _error.value = app.getString(R.string.error_network_connection)
                 _originalPokemonList.value = emptyList()
             } finally {
                 // Set loading state to false after fetching

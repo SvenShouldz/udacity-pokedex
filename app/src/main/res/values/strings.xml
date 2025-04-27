@@ -21,4 +21,6 @@
     <string name="failed_to_load_details">Failed to load details for %1$s</string>
     <string name="failed_to_release">Failed to release %1$s</string>
     <string name="failed_to_catch">Failed to catch %1$s</string>
+    <string name="permission_denied">Notification permission denied. Cannot show catch notifications.</string>
+    <string name="got_released">%1$s got released!</string>
 </resources>

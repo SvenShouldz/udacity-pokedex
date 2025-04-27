@@ -111,25 +111,52 @@ class PokemonGridFragment : Fragment() {
     }
 
     private fun navigateToDetail(pokemon: PokemonResult) {
-        // Using Safe Args
-        val action = PokemonGridFragmentDirections
-            .actionPokemonGridFragmentToPokemonDetailFragment(pokemon.name)
-        findNavController().navigate(action)
+        if (findNavController().currentDestination?.id == R.id.pokemonGridFragment) {
+            val action = PokemonGridFragmentDirections
+                .actionPokemonGridFragmentToPokemonDetailFragment(pokemon.name)
+            findNavController().navigate(action)
+        } else {
+            Log.w("PokemonGridFragment", "Navigation blocked: Already navigated away from grid fragment.")
+        }
     }
 
     private fun observeViewModel() {
+        var error: String?= null
+
+        viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
+            if (errorMessage != null) {
+                error = errorMessage
+                binding.gridErrorText.visibility = View.VISIBLE
+                binding.gridRetryButton.visibility = View.VISIBLE
+                binding.gridErrorText.text = errorMessage
+                binding.searchView.visibility = View.GONE
+                binding.searchEmptyText.visibility = View.GONE
+                viewModel.onErrorShown()
+            } else {
+                // No error message and not loading
+                if (viewModel.filteredPokemonList.value?.isNotEmpty() == true) {
+                    binding.gridErrorText.visibility = View.GONE
+                    binding.gridRetryButton.visibility = View.GONE
+                }
+            }
+        }
+
         viewModel.filteredPokemonList.observe(viewLifecycleOwner) { filteredList ->
             if (filteredList.isNotEmpty()) {
                 pokemonAdapter.submitList(filteredList)
                 // List has data, show RecyclerView, hide error view
                 binding.pokemonRecyclerView.visibility = View.VISIBLE
                 binding.searchView.visibility = View.VISIBLE
-                binding.gridErrorView.visibility = View.GONE
-                binding.searchEmptyText.visibility = View.GONE
+                binding.gridErrorText.visibility = View.GONE
+                binding.gridRetryButton.visibility = View.GONE
             }else{
-                // List is empty, hide RecyclerView, show error view
-                binding.pokemonRecyclerView.visibility = View.GONE
-                binding.searchEmptyText.visibility = View.VISIBLE
+                // List is empty, hide RecyclerView, show empty text
+                if(error == null){
+                    binding.searchView.visibility = View.VISIBLE
+                    binding.pokemonRecyclerView.visibility = View.GONE
+                    binding.searchEmptyText.visibility = View.VISIBLE
+                    binding.searchEmptyText.text = getString(R.string.pokemon_not_found)
+                }
             }
         }
 
@@ -140,22 +167,9 @@ class PokemonGridFragment : Fragment() {
                 // Hide everything else when loading
                 binding.pokemonRecyclerView.visibility = View.GONE
                 binding.searchView.visibility = View.GONE
-                binding.gridErrorView.visibility = View.GONE
+                binding.gridErrorText.visibility = View.GONE
+                binding.gridRetryButton.visibility = View.GONE
                 binding.searchEmptyText.visibility = View.GONE
-            }
-        }
-
-        viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
-            if (errorMessage != null) {
-                binding.gridErrorView.visibility = View.VISIBLE
-                binding.gridErrorText.text = errorMessage
-                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
-                viewModel.onErrorShown()
-            } else {
-                // No error message and not loading
-                if (viewModel.filteredPokemonList.value?.isNotEmpty() == true) {
-                    binding.gridErrorView.visibility = View.GONE
-                }
             }
         }
     }

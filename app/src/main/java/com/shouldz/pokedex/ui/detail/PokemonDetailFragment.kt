@@ -2,6 +2,8 @@ package com.shouldz.pokedex.ui.detail
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -47,7 +50,7 @@ class PokemonDetailFragment : Fragment() {
                 // Permission denied!
                 Toast.makeText(
                     context,
-                    "Notification permission denied. Cannot show catch notifications.",
+                    getString(R.string.permission_denied),
                     Toast.LENGTH_SHORT
                 ).show()
                 viewModel.onCatchReleaseClicked()
@@ -147,7 +150,6 @@ class PokemonDetailFragment : Fragment() {
             if (isLoading) {
                 binding.pokemonErrorText.text = ""
                 binding.contentGroup.visibility = View.INVISIBLE
-
             }
         }
         // Observer for Pokemon details (Success state)
@@ -170,8 +172,14 @@ class PokemonDetailFragment : Fragment() {
             } else {
                 getString(R.string.catch_pokemon)
             }
+            val colorResId = if (isCaught) {
+                R.color.md_theme_tertiaryContainer_mediumContrast
+            } else {
+                R.color.md_theme_errorContainer_mediumContrast
+            }
+            val colorInt = getColor(requireContext(), colorResId)
+            binding.catchReleaseButton.backgroundTintList = ColorStateList.valueOf(colorInt)
         }
-
         // Observer for error messages (Error state)
         viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
             if (errorMessage != null) {
