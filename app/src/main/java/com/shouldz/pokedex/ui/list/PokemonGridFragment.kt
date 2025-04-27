@@ -1,10 +1,12 @@
 package com.shouldz.pokedex.ui.list
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -59,6 +61,17 @@ class PokemonGridFragment : Fragment() {
         binding.caughtButton.setOnClickListener {
             findNavController().navigate(R.id.action_pokemonGridFragment_to_caughtListFragment)
         }
+        binding.searchViewCard.setOnClickListener {
+            activateSearchView()
+        }
+    }
+
+    private fun activateSearchView() {
+        binding.searchView.isIconified = false // Expand the SearchView
+        binding.searchView.requestFocus() // Request focus
+        // Show the keyboard
+        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm?.showSoftInput(binding.searchView.findFocus(), InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun setupToolbar() {
@@ -112,11 +125,11 @@ class PokemonGridFragment : Fragment() {
                 binding.pokemonRecyclerView.visibility = View.VISIBLE
                 binding.searchView.visibility = View.VISIBLE
                 binding.gridErrorView.visibility = View.GONE
+                binding.searchEmptyText.visibility = View.GONE
             }else{
                 // List is empty, hide RecyclerView, show error view
                 binding.pokemonRecyclerView.visibility = View.GONE
-                binding.searchView.visibility = View.GONE
-                binding.gridErrorView.visibility = View.VISIBLE
+                binding.searchEmptyText.visibility = View.VISIBLE
             }
         }
 
@@ -128,6 +141,7 @@ class PokemonGridFragment : Fragment() {
                 binding.pokemonRecyclerView.visibility = View.GONE
                 binding.searchView.visibility = View.GONE
                 binding.gridErrorView.visibility = View.GONE
+                binding.searchEmptyText.visibility = View.GONE
             }
         }
 

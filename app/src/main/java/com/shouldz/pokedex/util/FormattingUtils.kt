@@ -27,9 +27,15 @@ fun formatTypeList(types: List<TypeSlot>): String {
     }
 }
 
-// Formats List of Stats into single String
-fun formatStatsList(stats: List<StatSlot>): String {
-    return stats.joinToString("\n") { statSlot ->
+// Formats List of Stats into single String by count and offset
+fun formatStatsList(stats: List<StatSlot>, offset: Int, count: Int): String {
+    if (offset < 0 || offset >= stats.size) {
+        return "" // Return empty string if offset is out of bounds
+    }
+    val subList = stats.drop(offset).take(count)
+
+    // Format the sublist
+    return subList.joinToString("\n") { statSlot ->
         val name = formatStatName(statSlot.stat.name)
         val value = statSlot.baseStat
         "$name: $value"

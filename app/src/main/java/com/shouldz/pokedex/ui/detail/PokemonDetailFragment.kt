@@ -201,7 +201,8 @@ class PokemonDetailFragment : Fragment() {
             detailPokemonTypesText.text = formatTypeList(detail.types)
 
             // Set Stats
-            detailPokemonStatsText.text = formatStatsList(detail.stats)
+            detailPokemonStatsText.text = formatStatsList(detail.stats, offset = 0, count = 3)
+            detailPokemonStatsSecondary.text = formatStatsList(detail.stats, offset = 3, count = 3)
 
             // Set Height (Convert decimetres to meters)
             val heightInMeters = detail.height / 10.0
@@ -216,20 +217,6 @@ class PokemonDetailFragment : Fragment() {
 
         }
     }
-//
-//    private fun setContentItemsVisibility(visibility: Int) {
-//        // Set visibility for ALL content views
-//        binding.detailPokemonNameText.visibility = visibility
-//        binding.typesLabel.visibility = visibility
-//        binding.detailPokemonTypesText.visibility = visibility
-//        binding.statsLabel.visibility = visibility
-//        binding.detailPokemonStatsText.visibility = visibility
-//        binding.heightLabel.visibility = visibility
-//        binding.detailPokemonHeightText.visibility = visibility
-//        binding.weightLabel.visibility = visibility
-//        binding.detailPokemonWeightText.visibility = visibility
-//        binding.catchReleaseButton.visibility = visibility
-//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -12,7 +12,7 @@
         android:id="@+id/main_toolbar" android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:elevation="10dp"
+        android:elevation="@dimen/elevation"
         android:theme="@style/ThemeOverlay.App.Toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

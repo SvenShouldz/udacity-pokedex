@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/pokemonDetailFragment"
         android:name="com.shouldz.pokedex.ui.detail.PokemonDetailFragment"
-        android:label="fragment_pokemon_detail"
+        android:label="@string/finding_pokemon"
         tools:layout="@layout/fragment_pokemon_detail">
         <action
             android:id="@+id/action_pokemonDetailFragment_to_caughtListFragment"
@@ -20,7 +20,7 @@
     <fragment
         android:id="@+id/caughtListFragment"
         android:name="com.shouldz.pokedex.ui.caught.CaughtListFragment"
-        android:label="fragment_caught_list"
+        android:label="@string/caught_pokemon_title"
         tools:layout="@layout/fragment_caught_list">
         <action
             android:id="@+id/action_caughtListFragment_to_pokemonDetailFragment"
@@ -29,7 +29,7 @@
     <fragment
         android:id="@+id/pokemonGridFragment"
         android:name="com.shouldz.pokedex.ui.list.PokemonGridFragment"
-        android:label="fragment_pokemon_grid"
+        android:label="@string/app_name"
         tools:layout="@layout/fragment_pokemon_grid" >
         <action
             android:id="@+id/action_pokemonGridFragment_to_caughtListFragment"

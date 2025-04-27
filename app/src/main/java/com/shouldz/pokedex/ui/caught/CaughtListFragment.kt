@@ -12,6 +12,8 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.appbar.MaterialToolbar
 import com.shouldz.pokedex.R
+import com.shouldz.pokedex.data.local.CaughtPokemon
+import com.shouldz.pokedex.data.model.PokemonResult
 import com.shouldz.pokedex.databinding.FragmentCaughtListBinding
 
 class CaughtListFragment : Fragment() {
@@ -55,7 +57,9 @@ class CaughtListFragment : Fragment() {
 
     private fun setupRecyclerView() {
         // Initialize the adapter
-        caughtAdapter = CaughtListAdapter()
+        caughtAdapter = CaughtListAdapter { clickedPokemon ->
+            navigateToDetail(clickedPokemon)
+        }
 
         binding.caughtPokemonRecyclerView.apply {
             adapter = caughtAdapter
@@ -80,6 +84,13 @@ class CaughtListFragment : Fragment() {
                 View.VISIBLE
             }
         }
+    }
+
+    private fun navigateToDetail(pokemon: CaughtPokemon) {
+        // Using Safe Args
+        val action = CaughtListFragmentDirections
+            .actionCaughtListFragmentToPokemonDetailFragment(pokemon.name)
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {

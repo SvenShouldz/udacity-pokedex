@@ -9,18 +9,19 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.shouldz.pokedex.R
 import com.shouldz.pokedex.data.model.PokemonResult
-import com.shouldz.pokedex.databinding.ListItemPokemonBinding
+import com.shouldz.pokedex.databinding.GridItemPokemonBinding
 
 class PokemonGridAdapter(private val onItemClicked: (PokemonResult) -> Unit) :
     ListAdapter<PokemonResult, PokemonGridAdapter.PokemonViewHolder>(PokemonDiffCallback()) {
 
     // ViewHolder class
-    class PokemonViewHolder(private val binding: ListItemPokemonBinding) :
+    class PokemonViewHolder(private val binding: GridItemPokemonBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(pokemonResult: PokemonResult, listener: (PokemonResult) -> Unit) {
             binding.pokemonNameText.text = pokemonResult.name.replaceFirstChar { it.titlecase() }
 
             // Extracting pokemonId & add to URL string (due to PokeAPIs endpoint limitations)
+            // otherwise we had to make 151 api calls to get every sprite (inefficient)
             val pokemonId = pokemonResult.url.split("/").filter { it.isNotEmpty() }.lastOrNull()
             val spriteUrl = if (pokemonId != null) {
                 "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$pokemonId.png"
@@ -44,7 +45,7 @@ class PokemonGridAdapter(private val onItemClicked: (PokemonResult) -> Unit) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PokemonViewHolder {
         val binding =
-            ListItemPokemonBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            GridItemPokemonBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PokemonViewHolder(binding)
     }
 

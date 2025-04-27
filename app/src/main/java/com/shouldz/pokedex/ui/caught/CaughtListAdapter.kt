@@ -9,14 +9,15 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.shouldz.pokedex.R
 import com.shouldz.pokedex.data.local.CaughtPokemon
+import com.shouldz.pokedex.data.model.PokemonResult
 import com.shouldz.pokedex.databinding.ListItemCaughtPokemonBinding
 import com.shouldz.pokedex.util.capitalizeFirstLetter
 
-class CaughtListAdapter : ListAdapter<CaughtPokemon, CaughtListAdapter.CaughtPokemonViewHolder>(CaughtPokemonDiffCallback()) {
+class CaughtListAdapter(private val onItemClicked: (CaughtPokemon) -> Unit) : ListAdapter<CaughtPokemon, CaughtListAdapter.CaughtPokemonViewHolder>(CaughtPokemonDiffCallback()) {
 
     class CaughtPokemonViewHolder(private val binding: ListItemCaughtPokemonBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(caughtPokemon: CaughtPokemon) {
+        fun bind(caughtPokemon: CaughtPokemon, listener: (CaughtPokemon) -> Unit) {
             binding.apply {
                 // Set the Pokemon name (capitalized)
                 caughtPokemonNameText.text = capitalizeFirstLetter(caughtPokemon.name)
@@ -29,6 +30,9 @@ class CaughtListAdapter : ListAdapter<CaughtPokemon, CaughtListAdapter.CaughtPok
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(caughtPokemonSpriteImage)
             }
+            binding.root.setOnClickListener {
+                listener(caughtPokemon)
+            }
         }
     }
 
@@ -39,7 +43,7 @@ class CaughtListAdapter : ListAdapter<CaughtPokemon, CaughtListAdapter.CaughtPok
 
     override fun onBindViewHolder(holder: CaughtPokemonViewHolder, position: Int) {
         val currentPokemon = getItem(position)
-        holder.bind(currentPokemon)
+        holder.bind(currentPokemon, onItemClicked)
     }
 
     class CaughtPokemonDiffCallback : DiffUtil.ItemCallback<CaughtPokemon>() {
