@@ -2,13 +2,13 @@
 <resources>
 
     <style name="DetailTitleStyle">
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/text_light</item>
         <item name="android:textSize">@dimen/text_size_title</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="DetailTextStyle">
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/text_light</item>
         <item name="android:textSize">@dimen/text_size_body</item>
         <item name="android:textStyle">normal</item>
     </style>
@@ -16,7 +16,7 @@
     <style name="PokemonNameStyle">
         <item name="fontFamily">@font/pixelify_sans</item>
         <item name="android:fontFamily">@font/pixelify_sans</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/text_dark</item>
         <item name="android:textSize">@dimen/text_size_headline</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -24,8 +24,8 @@
     <style name="ErrorStyle">
         <item name="fontFamily">@font/pixelify_sans</item>
         <item name="android:fontFamily">@font/pixelify_sans</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/text_light</item>
+        <item name="android:textSize">@dimen/error_text_size</item>
         <item name="android:textStyle">bold</item>
     </style>
 

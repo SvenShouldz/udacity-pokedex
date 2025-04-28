@@ -8,6 +8,20 @@
     android:layout_marginTop="@dimen/toolbar_margin"
     tools:context=".ui.list.PokemonGridFragment">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/pokemon_recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/margin_small"
+        android:clipToPadding="false"
+        android:paddingTop="@dimen/top_scroll_margin"
+        android:paddingBottom="@dimen/bottom_scroll_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/grid_item_pokemon" />
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/search_view_card"
         android:layout_width="match_parent"
@@ -24,22 +38,9 @@
             android:id="@+id/search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/text_light"
             android:iconifiedByDefault="false" />
     </com.google.android.material.card.MaterialCardView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/pokemon_recycler_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/margin_small"
-        android:clipToPadding="false"
-        android:padding="@dimen/padding_small"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_view_card"
-        tools:listitem="@layout/grid_item_pokemon" />
 
     <ProgressBar
         android:id="@+id/loading_spinner"
@@ -47,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminate="true"
-        android:indeterminateTint="@color/white"
+        android:indeterminateTint="@color/text_light"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -101,7 +102,7 @@
         android:layout_marginBottom="@dimen/margin_medium"
         android:backgroundTint="@color/md_theme_tertiary"
         android:text="@string/caught_pokemon_button"
-        android:textColor="@color/white"
+        android:textColor="@color/text_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

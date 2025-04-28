@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="toolbar_margin">64dp</dimen>
+    <dimen name="bottom_scroll_margin">64dp</dimen>
+    <dimen name="top_scroll_margin">56dp</dimen>
     <dimen name="elevation">10dp</dimen>
     <dimen name="corner_radius">8dp</dimen>
     <dimen name="padding_small">4dp</dimen>
@@ -15,4 +17,5 @@
     <dimen name="text_size_headline">28sp</dimen>
     <dimen name="text_size_title">16sp</dimen>
     <dimen name="text_size_body">14sp</dimen>
+    <dimen name="error_text_size">16sp</dimen>
 </resources>

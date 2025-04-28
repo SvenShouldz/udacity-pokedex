@@ -70,7 +70,7 @@ object NotificationUtils {
         )
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_pokeball_placeholder)
+            .setSmallIcon(R.drawable.ic_notification_pokeball)
             .setContentTitle(
                 context.getString(
                     R.string.notification_title,
